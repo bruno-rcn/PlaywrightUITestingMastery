@@ -60,4 +60,26 @@ test.describe('How to find a locator', () => {
 
   });
 
+  test('User facing locators', async ({page}) => {
+
+    // input field - 
+    page.getByRole('textbox', {name: 'Email'})
+
+    // button
+    page.getByRole('button', {name: 'Sign in'})
+
+    // by label - this label is placed above the locator that you wanna save
+    page.getByLabel('Email')
+
+    // Placeholder
+    page.getByPlaceholder('Jane Doe')
+
+    // by title - is an attribute
+    page.getByTitle('IoT Dashboard')
+
+    // by TestId - this is an attribute config with focus to the script automation. Into the dev conde: data-testid="aut"
+    page.getByTestId('aut')
+
+  })
+
 })
