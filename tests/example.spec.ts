@@ -82,4 +82,30 @@ test.describe('How to find a locator', () => {
 
   })
 
+  test('Child elements', async ({page}) => {
+    // Just add the next attribute following the DOM
+    page.locator('nb-card nb-radio :text-is("Option 1")')
+
+    // one by one
+    page.locator('nb-card').locator('nb-radio').locator(':text-is("Option 1")')
+
+    // combine with oage locator
+    page.locator('nb-card').getByRole('button', {name: 'Sign in'})
+
+    // by index - try to avoid this one
+    page.locator('nb-card').nth(3)
+
+  })
+
+  test('Parents locators', async ({page}) => {
+
+    // find the parent adding the child inside the object has
+    page.locator('nb-card', {hasText: 'Using the Grid'})
+    page.locator('nb-card', {has: page.locator('#inputEmail1')})
+
+    // using filter instead has. This way we can use the methods getBy...
+    page.locator('nb-card').filter({hasText: 'Basic form'})
+    page.locator('nb-card').filter({has: page.locator('.status-danger')}).getByRole('button')
+  })
+
 })
