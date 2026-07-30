@@ -107,7 +107,7 @@ b. To debug run the command and the playwright will open a new windows to see th
 
 ---> HTML terminology
 
-a. HTML Tag: Starts and ends with angle braces (e.g., <input>).
+a. HTML Tag: Starts and ends with angle braces <> - (e.g., <input>) - .
 
 b. HTML Attributes: Characteristics of HTML tags, which may or may not have values (e.g., placeholder="email").
 
