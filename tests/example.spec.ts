@@ -62,6 +62,8 @@ test.describe('How to find a locator', () => {
 
   test('User facing locators', async ({page}) => {
 
+    // Best pratice is try to always use this way to locate elements
+
     // input field - 
     page.getByRole('textbox', {name: 'Email'})
 
@@ -82,7 +84,7 @@ test.describe('How to find a locator', () => {
 
   })
 
-  test('Child elements', async ({page}) => {
+  test('Locating Child elements', async ({page}) => {
     // Just add the next attribute following the DOM
     page.locator('nb-card nb-radio :text-is("Option 1")')
 
@@ -99,13 +101,22 @@ test.describe('How to find a locator', () => {
 
   test('Parents locators', async ({page}) => {
 
-    // find the parent adding the child inside the object has
-    page.locator('nb-card', {hasText: 'Using the Grid'})
-    page.locator('nb-card', {has: page.locator('#inputEmail1')})
+    // find the parent adding the child within the object has
+    page.locator('nb-card', {hasText: 'Using the Grid'}).getByRole('button').click()
+    page.locator('nb-card', {has: page.locator('#inputEmail1')}).getByRole('button').click()
 
     // using filter instead has. This way we can use the methods getBy...
     page.locator('nb-card').filter({hasText: 'Basic form'})
-    page.locator('nb-card').filter({has: page.locator('.status-danger')}).getByRole('button')
+
+    page.locator('nb-card').filter({hasText: 'Using the Grid'}).getByRole('button').click()
+    
+    page.locator('nb-card').filter({has: page.locator('.status-danger')}).getByRole('button').click()
+
+    page.locator('nb-card').filter({has: page.locator('nb-checkbox')}).filter({hasText: 'Sign in'}).getByLabel('Email').fill('test@tes.com')
+
+    // up the DOM
+    page.getByText('Using the Grid').locator('..').getByRole('button').click()
+    
   })
 
 })
