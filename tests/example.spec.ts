@@ -126,6 +126,35 @@ test.describe('How to find a locator', () => {
 
     await basicFormSection.getByLabel('Email').fill('email@test.com')
     await passWordField.fill('playwright')
-  }
+  })
+
+  test('Extracting values', async ({page}) => {
+
+    // Extracting text
+    const basicFormSection = page.locator('nb-card', {hasText: 'Basic form'})
+    const submitButton = await basicFormSection.getByRole('button').textContent()
+    //console.log(submitButton)
+    expect(submitButton).toEqual('Submit')
+
+
+    // Extracting multiples values
+    const allRadioButton = await page.locator('nd-radio').allTextContents()
+    //console.log(allRadioButton)
+    expect(allRadioButton).toContain('Option 1')
+
+
+    // Extracting input value
+    const emailFiled = basicFormSection.getByRole('textbox', {name: 'Email'})
+    await emailFiled.fill('test@test.com')
+    const emailFiledTextValue = await emailFiled.inputValue()
+    //console.log(emailFiledTextValue)
+    expect(emailFiledTextValue).toEqual('test@test.com')
+
+
+    // Extracting attr value
+    const emailPlaceHolder = await emailFiled.getAttribute('placeholder')
+    //console.log(emailPlaceHolder)
+
+  })
 
 })
