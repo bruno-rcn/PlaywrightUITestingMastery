@@ -119,4 +119,13 @@ test.describe('How to find a locator', () => {
     
   })
 
+  test('Reusing Locators', async ({ page }) => {
+    // save the locators into a constant
+    const basicFormSection = page.locator('nb-card', {hasText: 'Basic form'})
+    const passWordField = basicFormSection.getByLabel('Password')
+
+    await basicFormSection.getByLabel('Email').fill('email@test.com')
+    await passWordField.fill('playwright')
+  }
+
 })
