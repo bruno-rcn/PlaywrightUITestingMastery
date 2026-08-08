@@ -157,4 +157,38 @@ test.describe('How to find a locator', () => {
 
   })
 
+  test('Assertions', async ({page}) => {
+
+    // Generic assertion
+    const value = 5
+    expect(value).toEqual(5)
+
+    // Locator assertion
+    const basicFormSection = page.locator('nb-card', {hasText: 'Basic form'}).getByRole('button')
+    await expect(basicFormSection).toHaveText('Submit')
+    await expect(basicFormSection).toBeVisible()
+    await expect(basicFormSection).toBeEnabled()
+    await expect(basicFormSection).toHaveCount(1)
+
+    // Soft assertion - Let the test keep going and into the report will be show that in this part the test failed
+    await expect.soft(basicFormSection).toHaveText('Submit')
+
+  })
+
+  test('Wait for locator', async ({page}) => {
+
+    // wait for element
+    await page.getByRole('button', {name: 'Sign in'}).waitFor() // here we can add state: 'visible' or 'hidden' or 'attached' or 'detached'
+    await page.waitForSelector('nb-card', {state: 'visible'})
+
+    // wait for API response
+    await page.waitForResponse('**/api/endpoint')
+
+    // wait for load state (NOT RECOMMENDED) - The test will continue just when all network call are finished
+    await page.waitForLoadState('load') // 'load' | 'domcontentloaded' | 'networkidle'
+
+  })
+
+  test('')
+
 })
