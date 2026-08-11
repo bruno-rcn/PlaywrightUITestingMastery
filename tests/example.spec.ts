@@ -189,6 +189,51 @@ test.describe('How to find a locator', () => {
 
   })
 
-  test('')
+  test('Timeouts', async ({page}) => {
+
+    // set by test
+    test.setTimeout(10000)
+    test.slow() // increase the test time in 3x
+
+    /*
+
+    Global > Test > Action/Navigation/Assertion
+
+    |-- Global timeout - default: no timeout - Time limit of the whole test run
+      |-- Test timeout - default: 3000 ms - Time limit for the single test
+        |-- Action timeout - default: no timeout - Time limit for the action command (Ex: click, fill, ...)
+        |-- Navigation timeout - default: no timeout - Time limit for the action command (Ex: goto)
+        |-- Expect timeout - default: 5000ms - Time limit for expect locator assertion
+
+
+    Test Timeout and Global timeout are config in the playwright.config.ts
+      export default defineConfig({
+        timeou: 4000,
+        globaltimeout: 6000,
+        expect: {
+          timeout: 6000
+        }
+        ...
+
+    Action timeout is config in the same file but another section
+      use: {
+        actionTimeout: 4000,
+
+    
+    */ 
+
+    // could set a timeout in the action/assertion
+    page.getByText('Using the Grid').locator('..').getByRole('button').click({timeout: 5000})
+
+    const basicFormSection = page.locator('nb-card', {hasText: 'Basic form'}).getByRole('button')
+    await expect.soft(basicFormSection).toHaveText('Submit', {timeout: 8000})
+
+  })
+
+  test('How to generate code', async ({page}) => {
+    // Go to the Playwright Testing into the left menu and click on Record new - After that all action you do playwright will generate the code
+
+    // if you need to continuos a test that is in the middle, put the mouse cursor on the line you want to and click in Record at cursor
+  })
 
 })
