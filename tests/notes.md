@@ -151,3 +151,10 @@ e. getByTitle: Finds elements by their title attribute. Example: await page.getB
 
 f. getByTestId: Uses custom test IDs defined in the source code. Example: await page.getByTestId('sign-in').click().
 
+
+***
+
+
+---> Faker
+
+https://fakerjs.dev/guide/
