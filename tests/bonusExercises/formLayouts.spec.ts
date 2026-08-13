@@ -59,3 +59,30 @@ test('Using the Grid', async ({page}) => {
     await expect(radioButtonOption2).not.toBeChecked()
     await expect(radioButtonDisableOption).toBeDisabled()
 })
+
+
+test('Basic form', async ({page}) => {
+
+    // Identify the locators
+    const basicForm = page.locator('nb-card', {hasText: "Basic form"})
+    const emailAddressInput = basicForm.getByPlaceholder('Email')
+    const passwordInput = basicForm.locator('#exampleInputPassword1')
+    const checkBoxCheckMeOut = basicForm.getByRole('checkbox', {name: 'Check me out'})
+    const buttonSubmit = basicForm.getByRole('button', {name: 'Submit'})
+
+    // Faker    
+    const emailFaker = faker.internet.email()
+    const passwordFaker = faker.internet.password()
+
+    // Submit the form
+    await emailAddressInput.fill(emailFaker)
+    await passwordInput.fill(passwordFaker)
+    await checkBoxCheckMeOut.check({force: true})
+    await buttonSubmit.click()
+
+    // Assertion
+    await expect(emailAddressInput).toHaveValue(emailFaker)
+    await expect(passwordInput).toHaveValue(passwordFaker)
+
+})
+
