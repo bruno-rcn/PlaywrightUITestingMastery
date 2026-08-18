@@ -74,4 +74,40 @@ test.describe('Toastr page', () => {
 
     })
 
+    test('List and dropdowns', async ({page}) => {
+
+        // standart dropdown (starts with tag name <select...>) - we dont need to click() to select an option
+        // Lets take the parent element and than the select
+        //await page.locator('.form-group', {hasText: 'Toast type:'}).getByRole('combobox').selectOption('info')
+        //await expect(page.getByRole('combobox')).toHaveValue('info')
+
+        // ---
+
+        // custom dropdown (starts with tag name for ex: <button...) the list option is independetly from the dropdown
+        // here we need to click and than select the option
+        // option 1 - how to work with this custom combobox with list (use when you see a tag <ul that means (hole) lits and <li means list item)
+        await page.locator('.form-group', {hasText: 'Position:'}).locator('nb-select').click() // click on the dropdown
+        await page.getByRole('list').getByText('bottom-end').click() // select the option
+        await expect(page.locator('.form-group', {hasText: 'Position:'}).locator('nb-select')).toHaveText('bottom-end')
+
+        // option 2
+        await page.locator('.form-group', {hasText: 'Position:'}).locator('nb-select').click() // click on the dropdown
+        await page.locator('nb-option', {hasText: 'top-left'}).click()
+        await expect(page.locator('.form-group', {hasText: 'Position:'}).locator('nb-select')).toHaveText('top-left')
+
+        // ---
+
+        // looping through the list
+        const positionDropdownField = page.locator('.form-group', {hasText: 'Position:'}).locator('nb-select')
+        await positionDropdownField.click()
+
+        const allListValues = await page.locator('nb-option').allTextContents() // extract and save all the option list into this cont as an array
+        for(const listValues of allListValues){ // for each value within the allListValues will be interact one by one in listValues
+            page.locator('nb-option', {hasText: listValues}).click() // here will click 
+            await expect(positionDropdownField).toHaveText(listValues) // confirm the value from the element
+            await positionDropdownField.click() // open the list again to loop can continuos
+        }
+
+    })
+
 })

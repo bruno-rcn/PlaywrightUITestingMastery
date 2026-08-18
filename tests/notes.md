@@ -25,6 +25,14 @@ Step 3: Run the Application
 	npm start
 	To access: localhost:4200
 
+P.S.: When we will start this project in a new machine we need to run:
+
+Step 1: Install javascript Dependencies
+	npm install --force
+
+Step 2: Install Playwright Dependencies
+	npx playwright install
+
   ***
 
 ---> Playwright Installation - Doc: https://playwright.dev/docs/intro
