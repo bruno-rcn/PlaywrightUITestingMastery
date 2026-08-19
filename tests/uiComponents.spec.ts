@@ -103,11 +103,54 @@ test.describe('Toastr page', () => {
 
         const allListValues = await page.locator('nb-option').allTextContents() // extract and save all the option list into this cont as an array
         for(const listValues of allListValues){ // for each value within the allListValues will be interact one by one in listValues
-            page.locator('nb-option', {hasText: listValues}).click() // here will click 
+            await page.locator('nb-option', {hasText: listValues}).click() // here will click 
             await expect(positionDropdownField).toHaveText(listValues) // confirm the value from the element
             await positionDropdownField.click() // open the list again to loop can continuos
         }
 
     })
-
 })
+
+test.describe('Tooltip page', () => {
+    // You need to freeze the DOM to cath the message. 
+    // 1. Windows - Go to Source tab - F8 
+    // or
+    // 2. Mac - Go to Source tab - Cmd+\
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto('http://localhost:4200/');
+        await page.getByText('Modal & Overlays').click()
+        await page.getByText('Tooltip').click()
+    })
+
+    test('Tooltip placements', async ({page}) => {
+
+        await page.getByRole('button', {name: 'Top'}).hover()
+        await expect(page.locator('nb-tooltip')).toHaveText('This is a tooltip')
+    })
+})
+
+test.describe('Smart table page', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto('http://localhost:4200/');
+        await page.getByText('Tables & Data').click()
+        await page.getByText('Smart table').click()
+    })
+
+    test('Dialog box', async ({page}) => {
+        // This kind of dialog box it is not a html it is a Native dialog box. And when this appears PW dismiss on cancel button by default
+
+        // We need to intercept this event and catch to click on OK button - Create a listener
+        // need to intercept the event before the click
+        page.on('dialog', dialog => {
+            expect(dialog.message()).toEqual('Are you sure you want to delete?')
+            dialog.accept()
+        })
+
+        await page.locator('tr', {hasText: 'mdo@gmail.com'}).locator('.nb-trash').click()
+        await expect(page.locator('tr', {hasText: 'mdo@gmail.com'})).not.toBeVisible()
+
+    })
+})
+
