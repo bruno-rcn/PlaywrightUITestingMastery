@@ -152,5 +152,50 @@ test.describe('Smart table page', () => {
         await expect(page.locator('tr', {hasText: 'mdo@gmail.com'})).not.toBeVisible()
 
     })
+
+    test('Smart table test', async ({page}) => {
+        // TAble usually starts with a <table> tag and have inside <thead> and <tbody>
+        // then we have <tr> (table rows - line) and <th> or <td> (table header - column within the line)
+        // values in the table are usually HTML text
+
+        // 1. How to select row by any {name: visible text} this could be a text or a property value
+        // First find the row by the email and then click on the edit icon
+        const rowByEmail = page.getByRole('row', {name: 'fat@yandex.ru'})
+        await rowByEmail.locator('.nb-edit').click()
+        await rowByEmail.getByPlaceholder('Age').fill('55') // edit the last column
+        await rowByEmail.locator('.nb-checkmark').click()
+        await expect(rowByEmail.locator('td').last()).toHaveText('55')
+
+
+        // 2. get row by specific column
+        // [bring all rows page.getByRole('row')] [bring all the columns/cell .filter({has: page.getByRole('cell')})]
+        const rowByColumn = page.getByRole('row').filter({has: page.getByRole('cell').nth(1).getByText('10')}) // nth(1) ID column
+        await rowByColumn.locator('.nb-edit').click()
+        await page.locator('tbody').getByPlaceholder('E-mail').fill('emai@teste.com')
+        await page.locator('tbody').locator('.nb-checkmark').click()
+        await expect(rowByColumn.locator('td').nth(5)).toHaveText('emai@teste.com')
+
+        // 3. Loop through table rows
+        // create the array data
+        const agesData = ["20", "30", "40", "200"]
+
+        for(let age of agesData){
+            await page.getByPlaceholder('Age').fill(age)
+            // create the condition
+            if(age == "200"){
+                await expect(page.locator('tbody')).toContainText('No data found')
+            }else{
+                await expect(page.locator('tbody tr').first().locator('td').last()).toHaveText(age) // while the first line from the table do have this value our script will no take the list
+                // create a locator that catch all rows into an array
+                const allTableRows = await page.locator('tbody tr').all()
+                // second loop to navigate through this array list of rows
+                for(let row of allTableRows){
+                    await expect(row.locator('td').last()).toHaveText(age)
+                }
+            }
+        }
+
+    })
+
 })
 
